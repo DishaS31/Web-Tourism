@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="output.css">
+    <title>Vehicle-Booking</title>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-900 bg-opacity-50">
+    <div class="container mx-auto px-10 py-8 font-sans bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg rounded-lg shadow-xl">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-blue-700">Vehicle Booking for Amarkantak Trip</h1>
+            <p class="text-gray-600 mt-2">Select your preferred vehicle and book your trip.</p>
+        </div>
+        <div class="flex justify-center">
+            <!-- Form Section -->
+            <div class="w-full max-w-md p-2">
+                <form class="flex flex-col gap-6" id="vehicleBookingForm">
+                    <div class="flex flex-col gap-4">
+                        <input required type="text" id="fullName" class="w-full px-4 py-3 outline-none border border-gray-300 rounded-md" placeholder="Full Name" />
+                        <input required type="tel" id="phone" class="w-full px-4 py-3 outline-none border border-gray-300 rounded-md" placeholder="Phone Number" />
+                    </div>
+                    <input required type="date" id="tripDate" class="w-full px-4 py-3 outline-none border border-gray-300 rounded-md" />
+
+                    <select required id="vehicleType" class="w-full px-4 py-3 outline-none border border-gray-300 rounded-md">
+                        <option value="" disabled selected>Select Vehicle Type</option>
+                        <option value="bike">Bike</option>
+                        <option value="cycle">Cycle</option>
+                        <option value="car">Car</option>
+                    </select>
+
+                    <select required id="vehicleSelect" class="w-full px-4 py-3 outline-none border border-gray-300 rounded-md" disabled>
+                        <option value="" disabled selected>Select Vehicle</option>
+                    </select>
+
+                    <button class="w-full mt-2 py-3 bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-md transition duration-300" type="submit">
+                        Book Now
+                    </button>
+                    <p class="text-gray-600 text-center mt-4">
+                        Need Help?
+                        <a href="#" class="text-blue-700 hover:underline">Contact Us</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <!-- Vehicle Gallery -->
+        <div id="vehicleGallery" class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- The vehicle images will be updated dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Vehicle options based on type
+        const vehicles = {
+            bike: [
+                { name: 'Mountain Bike', image: 'https://images.unsplash.com/photo-1597006135783-d63df5dc46b2' },
+                { name: 'Sport Bike', image: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a' }
+            ],
+            cycle: [
+                { name: 'City Cycle', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475' },
+                { name: 'Hybrid Cycle', image: 'https://images.unsplash.com/photo-1605296867304-46d5465a13f1' }
+            ],
+            car: [
+                { name: 'Luxury Car', image: 'https://images.unsplash.com/photo-1558980664-10b71b06d5a2' },
+                { name: 'Convertible Car', image: 'https://images.unsplash.com/photo-1601836271385-f8d09077a6c9' }
+            ]
+        };
+
+        const vehicleTypeSelect = document.getElementById('vehicleType');
+        const vehicleSelect = document.getElementById('vehicleSelect');
+        const vehicleGallery = document.getElementById('vehicleGallery');
+
+        // Update vehicle options when vehicle type changes
+        vehicleTypeSelect.addEventListener('change', function () {
+            const selectedType = this.value;
+
+            // Clear previous options and gallery
+            vehicleSelect.innerHTML = '<option value="" disabled selected>Select Vehicle</option>';
+            vehicleGallery.innerHTML = '';
+
+            // Populate vehicle options and gallery based on type
+            if (selectedType && vehicles[selectedType]) {
+                vehicles[selectedType].forEach(vehicle => {
+                    // Add vehicle to select
+                    const option = document.createElement('option');
+                    option.value = vehicle.name;
+                    option.textContent = vehicle.name;
+                    vehicleSelect.appendChild(option);
+
+                    // Add vehicle image to gallery
+                    const galleryItem = document.createElement('div');
+                    galleryItem.classList.add('relative', 'w-full', 'h-40', 'overflow-hidden', 'rounded-lg', 'shadow-lg');
+
+                    const img = document.createElement('img');
+                    img.src = vehicle.image;
+                    img.alt = vehicle.name;
+                    img.classList.add('w-full', 'h-full', 'object-cover');
+
+                    const label = document.createElement('div');
+                    label.classList.add('absolute', 'bottom-0', 'bg-gray-800', 'bg-opacity-50', 'text-white', 'p-2', 'text-center', 'w-full');
+                    label.textContent = vehicle.name;
+
+                    galleryItem.appendChild(img);
+                    galleryItem.appendChild(label);
+                    vehicleGallery.appendChild(galleryItem);
+                });
+
+                // Enable vehicle select
+                vehicleSelect.disabled = false;
+            } else {
+                // Disable vehicle select if no type selected
+                vehicleSelect.disabled = true;
+            }
+        });
+
+        document.getElementById('vehicleBookingForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById('fullName').value;
+            const phone = document.getElementById('phone').value;
+            const tripDate = document.getElementById('tripDate').value;
+            const vehicleType = document.getElementById('vehicleType').value;
+            const vehicleName = document.getElementById('vehicleSelect').value;
+
+            const message = `Hello, I would like to book a ${vehicleName} (${vehicleType}) for a trip to Amarkantak on ${tripDate}.%0AName: ${name}%0APhone: ${phone}`;
+
+            const whatsappURL = `https://wa.me/916267363477?text=${message}`;
+
+            window.open(whatsappURL, '_blank');
+        });
+    </script>
+</html>
