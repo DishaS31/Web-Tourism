@@ -13,7 +13,7 @@ closeMenu.addEventListener('click', function () {
   mobileMenu.classList.add('hidden');
 });
 
-console.log("Hello");
+// console.log("Hello");
 
 //  vehicle booking
 let selectedVehicle = 'Motorbike';
